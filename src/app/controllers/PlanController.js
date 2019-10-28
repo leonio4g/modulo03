@@ -14,14 +14,6 @@ class PlanController {
       return res.status(400).json({error:'Validation Fails'})
     }
 
-    /*const checkIsProvider = await User.findOne({
-      where: {id: req.userId, provider: true}
-    });
-
-    if(!checkIsProvider){
-      return res.status(401).json({error: 'Only provider can load create'});
-    }
-*/
     const checkTitle = await Plan.findOne({where: {title:req.body.title}});
 
     if(checkTitle){
@@ -37,7 +29,43 @@ class PlanController {
   }
 
   async index(req,res){
-    const plans = await Plan.findAll({})
+    const plans = await Plan.findAll();
+
+    return res.json(plans);
+  }
+  async update(req, res){
+
+    //const {oldTilte} = req.body;
+    const {id}  = req.params;
+    const checkTitle = await Plan.findOne({
+      where:{
+        title:req.body.oldTitle,
+      },
+    });
+    if(!checkTitle){
+      return res.status(400).json({error: 'Title does not exists'});
+    }
+    const checkTitleExist = await Plan.findOne({where: {title:req.body.title}});
+
+    if(checkTitleExist){
+      return res.status(400).json({error: 'Title already exists'});
+    }
+    const plan = await Plan.findByPk(id);
+    const upplan = await plan.update(req.body);
+    return res.json(upplan);
+
+  }
+  async delete(req, res){
+
+    const {id} = req.params;
+    const plan = await Plan.findByPk(id);
+    if(!plan){
+      return res.status(400).json({error: 'Id does not exists'});
+    }
+
+    await plan.destroy();
+
+    return res.json(plan);
   }
 }
 
