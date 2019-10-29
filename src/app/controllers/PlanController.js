@@ -1,4 +1,4 @@
-import Plan from '../models/Plan';
+import Plan from '../models/Plans';
 import * as Yup from 'yup';
 
 class PlanController {
@@ -35,7 +35,6 @@ class PlanController {
   }
   async update(req, res){
 
-    //const {oldTilte} = req.body;
     const {id}  = req.params;
     const checkTitle = await Plan.findOne({
       where:{
