@@ -8,7 +8,6 @@ class EnrollmentMail{
   }
 
   async handle({ data }){
-    console.log("a fila executou");
     const { students, plan, start_date, end_date, total_price } = data;
     await Mail.sendMail({
       to:`${students.name} <${students.email}>`,

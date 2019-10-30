@@ -12,10 +12,13 @@ class Enrollment extends Model {
       },
       {
         sequelize,
-      });
+      }
+
+      );
       return this;
   }
     associate(models){
+
     this.belongsTo(models.Students, {foreignKey: 'students_id', as:'students'});
     this.belongsTo(models.Plans, {foreignKey: 'plan_id', as:'plan'});
   }
