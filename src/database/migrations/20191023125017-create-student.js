@@ -18,6 +18,13 @@ module.exports = {
            allowNull:false,
            unique:true
         },
+        avatar_id:{
+          type:Sequelize.INTEGER,
+          references:{model:'file', key:'id'},
+          onUpdate:'CASCADE',
+          onDelete:'SET NULL',
+          allowNull:true,
+        },
         age:{
           type:Sequelize.INTEGER,
            allowNull:false,
