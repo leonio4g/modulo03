@@ -20,4 +20,4 @@ class Students extends Model{
   }
 }
 
-export default  Students;
+export default Students;

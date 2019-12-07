@@ -1,8 +1,31 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import Students from '../models/Students';
 import User from '../models/User';
 
 class StudentsController {
+
+  async index(req, res){
+    const { name, page = 1 } = req.query;
+
+    if(name){
+      const ListStudents = await Students.findAll({
+        where:{
+          name:{
+            [Op.like]:`${name}`,
+          },
+        },
+        limit:10,
+        offset:(page -1 )*10,
+      });
+      return res.json(ListStudents);
+    }
+    const students = await Students.findAll();
+
+    return res.json(students);
+
+  }
+
   async store(req,res){
 
     const Schema = Yup.object().shape({
@@ -20,7 +43,7 @@ class StudentsController {
     const studentsExists = await Students.findOne({where:{email:req.body.email}});
 
     if(studentsExists){
-      return res.status(400).json({error: 'Students already Exists'})
+      return res.status(400).json({error: 'Students already Exists'});
     }
 
     const userid = await User.findByPk(req.userId);
@@ -69,6 +92,7 @@ class StudentsController {
     const {name,email,age, height, weight} = await student.update(req.body);
 
     return res.json({
+      id,
       name,
       email,
       age,
@@ -76,6 +100,18 @@ class StudentsController {
       weight
     });
   }
+
+async delete(req, res) {
+  const students = await Students.findByPk(req.params.id);
+
+  if (!students) {
+    return res.status(404).json({ error: 'Student not exist.' });
+  }
+
+  await students.destroy();
+
+  return res.json();
+}
 }
 
 export default new StudentsController();

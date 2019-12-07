@@ -1,12 +1,15 @@
 import Sequelize from 'sequelize';
+
 import User from '../app/models/User';
 import Students from '../app/models/Students';
 import Plan from '../app/models/Plans';
 import Enrollment from '../app/models/Enrollment';
 import Checkin from '../app/models/Checkin';
 import HelpOrder from '../app/models/HelpOrder';
-import databaseConfig from '../config/database';
 import File from '../app/models/File';
+
+import databaseConfig from '../config/database';
+
 
 const models = [User,Students,File,Plan,Enrollment,Checkin,HelpOrder];
 

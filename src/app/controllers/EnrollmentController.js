@@ -9,10 +9,30 @@ import Queue from '../../lib/Queue';
 
 class EnrollmentController {
   async index(req, res){
-    const enrollment = await Enrollment.findAll();
+
+    const { page = 1 } = req.query;
+
+    const enrollment = await Enrollment.findAll({
+      attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
+      limit:10,
+      offset:(page - 1) *10,
+      include: [
+        {
+          model: Students,
+          as: 'students',
+          attributes: ['name', 'id'],
+        },
+        {
+          model: Plan,
+          as: 'plan',
+          attributes: ['title', 'id'],
+        },
+      ],
+    });
 
     return res.json(enrollment)
   }
+
   async store(req, res){
 
     const schema = Yup.object().shape({

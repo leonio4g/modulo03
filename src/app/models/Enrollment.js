@@ -1,3 +1,4 @@
+import { isBefore, isAfter } from 'date-fns';
 import Sequelize, { Model } from 'sequelize';
 
 class Enrollment extends Model {
@@ -9,6 +10,18 @@ class Enrollment extends Model {
         start_date:Sequelize.DATE,
         end_date:Sequelize.DATE,
         total_price:Sequelize.INTEGER,
+        active: {
+          type: Sequelize.VIRTUAL(Sequelize.BOOLEAN, [
+            'start_date',
+            'end_date',
+          ]),
+          get() {
+            return (
+              isBefore(this.get('start_date'), new Date()) &&
+              isAfter(this.get('end_date'), new Date())
+            );
+          },
+        },
       },
       {
         sequelize,
@@ -17,11 +30,11 @@ class Enrollment extends Model {
       );
       return this;
   }
-    associate(models){
+  associate(models){
 
     this.belongsTo(models.Students, {foreignKey: 'students_id', as:'students'});
     this.belongsTo(models.Plans, {foreignKey: 'plan_id', as:'plan'});
   }
 }
 
-export default  Enrollment;
+export default Enrollment;

@@ -7,8 +7,11 @@ import Enrollment from '../models/Enrollment';
 
 class CheckinController {
   async index(req, res) {
+    const { page =1 } = req.query;
     const chekins = await Checkin.findAll({
       where: { students_id: req.params.id },
+      limit:10,
+      offset:(page -1)*10,
     });
     return res.json(chekins);
   }
@@ -44,7 +47,7 @@ class CheckinController {
     if (oldCheckins === 5) {
       return res.status(401).json({ error: 'maximum login reached.' });
     }
-    console.log(students_id, 'eua qui');
+
     const checkin = await Checkin.create({students_id});
 
     return res.json(checkin);
