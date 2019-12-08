@@ -2,14 +2,12 @@ import { isBefore, isAfter } from 'date-fns';
 import Sequelize, { Model } from 'sequelize';
 
 class Enrollment extends Model {
-  static init(sequelize){
+  static init(sequelize) {
     super.init(
       {
-        students_id:Sequelize.INTEGER,
-        plan_id:Sequelize.INTEGER,
-        start_date:Sequelize.DATE,
-        end_date:Sequelize.DATE,
-        total_price:Sequelize.INTEGER,
+        start_date: Sequelize.DATE,
+        end_date: Sequelize.DATE,
+        total_price: Sequelize.FLOAT,
         active: {
           type: Sequelize.VIRTUAL(Sequelize.BOOLEAN, [
             'start_date',
@@ -26,14 +24,17 @@ class Enrollment extends Model {
       {
         sequelize,
       }
+    );
 
-      );
-      return this;
+    return this;
   }
-  associate(models){
 
-    this.belongsTo(models.Students, {foreignKey: 'students_id', as:'students'});
-    this.belongsTo(models.Plans, {foreignKey: 'plan_id', as:'plan'});
+   associate(models) {
+    this.belongsTo(models.Students, {
+      foreignKey: 'student_id',
+      as: 'students',
+    });
+    this.belongsTo(models.Plans, { foreignKey: 'plan_id', as: 'plan' });
   }
 }
 

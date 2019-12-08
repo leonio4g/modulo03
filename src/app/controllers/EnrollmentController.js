@@ -8,29 +8,21 @@ import EnrollmentMail from '../jobs/EnrollmentMail';
 import Queue from '../../lib/Queue';
 
 class EnrollmentController {
+
   async index(req, res){
 
     const { page = 1 } = req.query;
 
     const enrollment = await Enrollment.findAll({
-      attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
+      attributes: ['id','students_id','plan_id', 'start_date', 'end_date', 'total_price', 'active'],
+      order:['id'],
       limit:10,
       offset:(page - 1) *10,
-      include: [
-        {
-          model: Students,
-          as: 'students',
-          attributes: ['name', 'id'],
-        },
-        {
-          model: Plan,
-          as: 'plan',
-          attributes: ['title', 'id'],
-        },
-      ],
+
+
     });
 
-    return res.json(enrollment)
+    return res.json(enrollment);
   }
 
   async store(req, res){
@@ -112,7 +104,7 @@ class EnrollmentController {
 
     return res.json(enrollments);
   }
-  async Delete(req, res){
+  async delete(req, res){
     const { id } = req.params;
 
     const enrollment = await Enrollment.findByPk(id);
