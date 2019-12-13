@@ -2,14 +2,15 @@ import * as Yup from 'yup';
 import { parseISO, addMonths } from 'date-fns';
 import Enrollment from '../models/Enrollment';
 import Students from '../models/Students';
-import Plan from '../models/Plans';
+import Plan from '../models/Plan';
 
 import EnrollmentMail from '../jobs/EnrollmentMail';
 import Queue from '../../lib/Queue';
 
 class EnrollmentController {
   async index(req, res) {
-    const { page = 1 } = req.query;
+    const { page } = req.query || 1;
+    const LIMIT = 10;
 
     const enrollment = await Enrollment.findAll({
       attributes: [
@@ -22,8 +23,8 @@ class EnrollmentController {
         'active',
       ],
       order: ['id'],
-      limit: 10,
-      offset: (page - 1) * 10,
+      limit: LIMIT,
+      offset: (page - 1) * LIMIT,
     });
 
     return res.json(enrollment);
@@ -43,7 +44,7 @@ class EnrollmentController {
       where: { students_id: req.body.students_id },
     });
 
-    if (!enrollmentExists) {
+    if (enrollmentExists) {
       return res.status(400).json({ error: 'Student already enrolled.' });
     }
 
@@ -52,6 +53,7 @@ class EnrollmentController {
     if (!plan) {
       return res.status(400).json({ error: 'Plan not exists.' });
     }
+
     const { start_date, students_id, plan_id } = req.body;
 
     const startDate = parseISO(req.body.start_date);
@@ -65,6 +67,7 @@ class EnrollmentController {
       end_date,
       total_price,
     });
+
     const students = await Students.findByPk(req.body.students_id, {
       attributes: ['name', 'email'],
     });
@@ -82,7 +85,7 @@ class EnrollmentController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
-      student_id: Yup.number(),
+      students_id: Yup.number(),
       plan_id: Yup.number(),
       start_date: Yup.date(),
     });

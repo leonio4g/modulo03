@@ -14,7 +14,7 @@ class Checkin extends Model {
     return this;
   }
 
-  associate(models) {
+  static associate(models) {
     this.belongsTo(models.Students, {
       foreignKey: 'students_id',
       as: 'students',

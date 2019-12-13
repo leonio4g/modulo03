@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import Plan from '../models/Plans';
+import Plan from '../models/Plan';
 
 class PlanController {
   async store(req, res) {

@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 
 import User from '../app/models/User';
 import Students from '../app/models/Students';
-import Plan from '../app/models/Plans';
+import Plan from '../app/models/Plan';
 import Enrollment from '../app/models/Enrollment';
 import Checkin from '../app/models/Checkin';
 import HelpOrder from '../app/models/HelpOrder';
