@@ -29,7 +29,7 @@ class Enrollment extends Model {
     return this;
   }
 
-   associate(models) {
+  associate(models) {
     this.belongsTo(models.Students, {
       foreignKey: 'student_id',
       as: 'students',

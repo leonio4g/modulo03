@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "dev:debug": "nodemon --inspect src/server.js",
-    "queue": "nodemon src/queue.js"
+    "queue": "nodemon src/queue.js",
+    "lint": "eslint --fix src/**/*.js",
+    "lint:prettier": "prettier --write src/**/*.js"
   },
   "dependencies": {
     "@sentry/node": "5.4.3",
