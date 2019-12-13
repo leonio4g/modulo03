@@ -7,31 +7,29 @@ import HelpOrderMail from '../jobs/HelpOrderMail';
 import Queue from '../../lib/Queue';
 
 class HelpOrderController {
-
   async index(req, res) {
-    const { page =1 } = req.query;
+    const { page = 1 } = req.query;
 
     const helpOrders = await HelpOrder.findAll({
       where: { answer_at: null },
-      limit:10,
-      offset:(page -1) *10,
-        });
+      limit: 10,
+      offset: (page - 1) * 10,
+    });
 
     return res.json(helpOrders);
   }
 
   async show(req, res) {
-    const { page =1 }= req.query;
+    const { page = 1 } = req.query;
     const helpOrders = await HelpOrder.findAll({
       where: { students_id: req.params.id },
       limit: 10,
-      offset:(page -1)*10,
+      offset: (page - 1) * 10,
     });
     return res.json(helpOrders);
   }
 
-  async store(req, res){
-
+  async store(req, res) {
     const schema = Yup.object().shape({
       question: Yup.string().required(),
     });
@@ -44,20 +42,20 @@ class HelpOrderController {
 
     const studentsExist = await Students.findByPk(students_id);
 
-    if(!studentsExist){
-      return res.status(400).json({error: 'Student does not exists'});
+    if (!studentsExist) {
+      return res.status(400).json({ error: 'Student does not exists' });
     }
-    const question = req.body.question;
+    const { question } = req.body;
 
     const helpOrder = await HelpOrder.create({
       students_id,
       question,
-    })
+    });
 
     return res.json(helpOrder);
   }
 
-  async update(req, res){
+  async update(req, res) {
     const schema = Yup.object().shape({
       answer: Yup.string().required(),
     });
@@ -69,14 +67,14 @@ class HelpOrderController {
     const answer_at = new Date();
 
     const Help = await HelpOrder.findByPk(req.params.id);
-    if(!Help){
-      return res.status(400).json({error: 'Help request not found'});
+    if (!Help) {
+      return res.status(400).json({ error: 'Help request not found' });
     }
-    if(Help.answer){
-      return res.status(400).json({error: 'Help request already answered'});
+    if (Help.answer) {
+      return res.status(400).json({ error: 'Help request already answered' });
     }
 
-    const answer = req.body.answer;
+    const { answer } = req.body;
 
     await Help.update({
       answer,
@@ -84,7 +82,7 @@ class HelpOrderController {
     });
 
     const students = await Students.findByPk(Help.students_id, {
-      attributes:['name','email'],
+      attributes: ['name', 'email'],
     });
 
     await Queue.add(HelpOrderMail.key, {
@@ -93,7 +91,6 @@ class HelpOrderController {
     });
 
     return res.json(Help);
-
   }
 }
 

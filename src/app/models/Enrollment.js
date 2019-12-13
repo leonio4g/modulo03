@@ -29,12 +29,12 @@ class Enrollment extends Model {
     return this;
   }
 
-   associate(models) {
+  static associate(models) {
     this.belongsTo(models.Students, {
-      foreignKey: 'student_id',
-      as: 'students',
+      foreignKey: 'students_id',
+      as: 'student',
     });
-    this.belongsTo(models.Plans, { foreignKey: 'plan_id', as: 'plan' });
+    this.belongsTo(models.Plan, { foreignKey: 'plan_id', as: 'plan' });
   }
 }
 
